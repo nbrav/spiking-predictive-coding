@@ -1,6 +1,10 @@
 __pycache__/
 *.pyc
 .env
+.png
+.jpg
+.jpeg
+*.pdf
 .venv/
 data/
 results/*
