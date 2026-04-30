@@ -16,7 +16,7 @@ def get_mnist_transform(normalize: bool = True):
     if normalize:
         return transforms.Compose([
             transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,))
+            # transforms.Normalize((0.1307,), (0.3081,))
         ])
     else:
         return transforms.ToTensor()
