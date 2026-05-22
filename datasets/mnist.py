@@ -2,10 +2,6 @@ import torch
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
-def get_device():
-    """Return available device."""
-    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 def get_mnist_transform(normalize: bool = True):
     """
     Returns MNIST transform pipeline.
@@ -84,7 +80,7 @@ def get_mnist_loaders(
 
     return train_loader, test_loader
 
-def preprocess_batch(x, y, device, flatten: bool = True, one_hot: bool = True):
+def preprocess_mnist_batch(x, y, device, flatten: bool = True, one_hot: bool = True):
     """
     Preprocess a batch:
     - move to device
@@ -111,3 +107,4 @@ def preprocess_batch(x, y, device, flatten: bool = True, one_hot: bool = True):
     y = y.to(device)
 
     return x, y
+
