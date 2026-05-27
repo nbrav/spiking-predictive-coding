@@ -582,3 +582,126 @@ def plot_activity_and_error_gif(
     )
 
     plt.close(fig)
+    
+def plot_n_step_training_experiment(
+    results: Dict[str, list],
+    filename: str | Path,
+) -> None:
+    filename = Path(filename)
+    filename.parent.mkdir(parents=True, exist_ok=True)
+
+    n_steps = np.asarray(results["n_step"])
+
+    train_acc = np.asarray(results["train_accuracy"])
+    test_acc = np.asarray(results["test_accuracy"])
+
+    final_err = np.asarray(results["final_total_error"])
+
+    plt.rcParams.update(PLOT_STYLE)
+
+    fig, axes = plt.subplots(
+        1,
+        2,
+        figsize=(7.2, 3.0),
+        sharex=True,
+    )
+
+    # ------------------------------------------------------------
+    # Accuracy
+    # ------------------------------------------------------------
+
+    axes[0].plot(
+        n_steps,
+        train_acc,
+        marker="o",
+        linewidth=2.2,
+        markersize=5,
+        color="#0072B2",
+        label="Train",
+    )
+
+    axes[0].plot(
+        n_steps,
+        test_acc,
+        marker="o",
+        linewidth=2.2,
+        markersize=5,
+        color="#D55E00",
+        label="Test",
+    )
+
+    axes[0].set_ylabel(
+        "Accuracy (%)",
+        fontweight="bold",
+    )
+
+    axes[0].legend(
+        frameon=False,
+    )
+
+    # ------------------------------------------------------------
+    # Prediction error
+    # ------------------------------------------------------------
+
+    axes[1].plot(
+        n_steps,
+        final_err,
+        marker="o",
+        linewidth=2.2,
+        markersize=5,
+        color="#000000",
+    )
+
+    axes[1].set_ylabel(
+        "Prediction error",
+        fontweight="bold",
+    )
+
+    axes[1].set_yscale("log")
+
+    axes[0].set_xscale("log")
+    axes[1].set_xscale("log")
+    
+    # ------------------------------------------------------------
+    # Shared x-axis formatting
+    # ------------------------------------------------------------
+
+    for ax in axes:
+
+        # same xticks on both plots
+        ax.set_xticks(n_steps)
+
+        # force all labels to appear
+        ax.set_xticklabels(
+            [str(x) for x in n_steps]
+        )
+
+        _apply_axis_style(ax)
+
+    # ------------------------------------------------------------
+    # Shared x-label
+    # ------------------------------------------------------------
+
+    fig.supxlabel(
+        "Inference steps",
+        fontsize=12,
+        fontweight="bold",
+        y=0.02,
+    )
+
+    fig.tight_layout(
+        w_pad=2.0,
+    )
+
+    fig.savefig(
+        filename.with_suffix(".png"),
+        dpi=400,
+        bbox_inches="tight",
+    )
+
+    fig.savefig(
+        filename.with_suffix(".pdf"),
+        bbox_inches="tight",
+    )
+
+    plt.close(fig)
